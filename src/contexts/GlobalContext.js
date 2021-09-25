@@ -177,6 +177,64 @@ export const GlobalProvider = (props) => {
         })
     })
 
+    const deleteGame = (id, cb) => {
+
+        let token = JSON.parse(Cookies.get("user_token")).token
+        let config = {
+            headers: {"Authorization": `Bearer ${token}`}
+        }
+
+        axios.delete(`https://backendexample.sanbersy.com/api/data-game/${id}`, config).then(res => {
+            return cb({
+                error: false,
+            })
+        }).catch(err => {
+            return cb({
+                message: err.response.data,
+                error: true,
+                http: err.response.status
+            })
+        })
+    }
+
+    const addGame = ((data, cb) => {
+        let token = JSON.parse(Cookies.get("user_token")).token
+        let config = {
+            headers: {"Authorization": `Bearer ${token}`}
+        }
+
+        axios.post(`https://backendexample.sanbersy.com/api/data-game`, data, config).then(res => {
+            return cb({
+                error: false,
+            })
+        }).catch(err => {
+            return cb({
+                message: err.response.data,
+                error: true,
+                http: err.response.status
+            })
+        })
+    })
+
+    const updateGame = ((id, data, cb) => {
+        let token = JSON.parse(Cookies.get("user_token")).token
+        let config = {
+            headers: {"Authorization": `Bearer ${token}`}
+        }
+
+        axios.put(`https://backendexample.sanbersy.com/api/data-game/${id}`, data, config).then(res => {
+            return cb({
+                error: false,
+            })
+        }).catch(err => {
+            return cb({
+                message: err.response.data,
+                error: true,
+                http: err.response.status
+            })
+        })
+    })
+
     return (
         <GlobalContext.Provider value={{
             getMovies,
@@ -188,6 +246,9 @@ export const GlobalProvider = (props) => {
             deleteMovie,
             addMovie,
             updateMovie,
+            deleteGame,
+            addGame,
+            updateGame,
         }}>
             {props.children}
         </GlobalContext.Provider>

@@ -92,7 +92,7 @@ const GamesDetail = () => {
                                                 <span>Single-Player</span>
                                             </div>
                                             <div style={{display: "flex", alignItems: "center", gap: "6px" }}>
-                                                { game.multiPlayer ? (
+                                                { game.multiplayer ? (
                                                     <CheckCircleFilled style={{ color: "#6DE54C" }} />
                                                 ) : (
                                                     <CloseCircleFilled style={{ color: "#EB3E37" }} />

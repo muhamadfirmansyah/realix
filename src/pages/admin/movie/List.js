@@ -1,4 +1,4 @@
-import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { ExclamationCircleFilled } from "@ant-design/icons";
 import { Table, Row, Col, Typography, Space, Skeleton, Button, message, Modal } from "antd"
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -72,9 +72,7 @@ const AdminMovieList = () => {
             title: 'Title',
             dataIndex: 'title',
             key: "title",
-            filtered: true,
-            onFilter: (value, record) => record.title.indexOf(value) === 0,
-            sorter: (a, b) => a.title - b.title ? 1 : -1,
+            sorter: (a, b) => a.title.localeCompare(b.title),
         },
         {
             title: 'Year',
@@ -84,7 +82,7 @@ const AdminMovieList = () => {
             onFilter: (value, record) => {
                 return record.year === value
             },
-            sorter: (a, b) => a.year < b.year ? -1 : 1
+            sorter: (a, b) => a.year - b.year
         },
         {
             title: 'Rating',
@@ -94,7 +92,7 @@ const AdminMovieList = () => {
             onFilter: (value, record) => {
                 return record.rating === value
             },
-            sorter: (a, b) => a.rating < b.rating ? -1 : 1
+            sorter: (a, b) => a.rating - b.rating
         },
         {
             title: 'Duration',
@@ -104,7 +102,7 @@ const AdminMovieList = () => {
             onFilter: (value, record) => {
                 return record.duration === value
             },
-            sorter: (a, b) => a.address - b.address
+            sorter: (a, b) => a.duration - b.duration
         },
         {
             title: "Action",
@@ -114,8 +112,8 @@ const AdminMovieList = () => {
                 <Space size="middle" key={record.id}>
                   <Button danger ghost onClick={() => {
                       Modal.confirm({
-                          title: 'Do you Want to delete this item?',
-                          icon: <ExclamationCircleOutlined />,
+                          title: 'Do you want to delete this item?',
+                          icon: <ExclamationCircleFilled />,
                           content: 'The item will be deleted permanently.',
                           onOk() {
                             handleDelete(record.id)
@@ -132,7 +130,7 @@ const AdminMovieList = () => {
     ];
 
     if (loading) {
-        return <Skeleton style={{ marginTop: "2rem" }} active />
+        return <Skeleton active />
     }
 
     return (
