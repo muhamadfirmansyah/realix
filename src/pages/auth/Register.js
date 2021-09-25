@@ -64,7 +64,7 @@ const Register = () => {
                 style={{ marginBottom: "1rem" }}
                 label="Name"
                 name="name"
-                rules={[{ required: true, message: "Please input your email!" }]}
+                rules={[{ required: true, message: "Please input your name!" }]}
             >
                 <Input placeholder="Type your name here..." className="custom-input" />
             </Form.Item>
