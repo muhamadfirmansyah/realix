@@ -351,4 +351,14 @@ body {
     height: 42px;
     width: 120px;
 }
+
+.custom-form .ant-form-item-has-error .ant-input-password {
+    background-color: #fff1f5 !important;
+}
+
+.custom-form .ant-input-password {
+    background-color: #e8f0fe;
+    border: none;
+    border-radius: 12px;
+}
 /* End of Form */

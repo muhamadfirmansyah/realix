@@ -235,6 +235,25 @@ export const GlobalProvider = (props) => {
         })
     })
 
+    const updatePassword = (data, cb) => {
+        let token = JSON.parse(Cookies.get("user_token")).token
+        let config = {
+            headers: {"Authorization": `Bearer ${token}`}
+        }
+
+        axios.post(`https://backendexample.sanbersy.com/api/change-password`, data, config).then(res => {
+            return cb({
+                error: false,
+            })
+        }).catch(err => {
+            return cb({
+                message: err.response.data,
+                error: true,
+                http: err.response.status
+            })
+        })
+    }
+
     return (
         <GlobalContext.Provider value={{
             getMovies,
@@ -249,6 +268,7 @@ export const GlobalProvider = (props) => {
             deleteGame,
             addGame,
             updateGame,
+            updatePassword,
         }}>
             {props.children}
         </GlobalContext.Provider>

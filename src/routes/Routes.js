@@ -14,6 +14,7 @@ import AdminMovieEdit from "../pages/admin/movie/Edit";
 import AdminGameList from "../pages/admin/game/List";
 import AdminGameCreate from "../pages/admin/game/Create";
 import AdminGameEdit from "../pages/admin/game/Edit";
+import ChangePassword from "../pages/admin/auth/ChangePassword";
 
 const Routes = () => {
 
@@ -62,7 +63,7 @@ const Routes = () => {
           <LayoutComponent content={<AdminGameEdit />} />
         </ValidatedRoute>
         <ValidatedRoute path="/admin/change-password" exact>
-          <LayoutComponent content={<AdminMovieCreate />} />
+          <LayoutComponent content={<ChangePassword />} />
         </ValidatedRoute>
         <Route path="/login" exact>
           <LayoutComponent content={<Login />} />

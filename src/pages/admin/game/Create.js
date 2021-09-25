@@ -1,9 +1,7 @@
 import { Typography } from "antd"
-import { useHistory } from "react-router-dom"
 import GameForm from "./Form"
 
 const AdminGameCreate = () => { 
-    const history = useHistory()
 
     return (
         <div style={{ marginTop: "2rem" }}>
