@@ -46,7 +46,7 @@ const MoviesDetail = () => {
                 <Breadcrumb.Item>
                     <Link to="/movies">Movies</Link>
                 </Breadcrumb.Item>
-                <Breadcrumb.Item>Judul Movie</Breadcrumb.Item>
+                <Breadcrumb.Item>{ movie.title }</Breadcrumb.Item>
             </Breadcrumb>
 
             <Row gutter={[22, 22]} style={{ marginTop: "28px" }}>

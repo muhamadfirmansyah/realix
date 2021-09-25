@@ -14,7 +14,8 @@ const Movies = () => {
 
         getMovies(cb => {
             if (!cb.error) {
-                setMovies(cb.data)
+                let data = cb.data.sort((a, b) => a.id < b.id ? 1 : -1)
+                setMovies(data)
                 setLoading(false)
             }
         })

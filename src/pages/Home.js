@@ -35,7 +35,7 @@ const Home = () => {
 
         getGames(cb => {
             if (!cb.error) {
-                let data = cb.data.sort((a, b) => a.created_at < b.created_at).slice(0, 6)
+                let data = cb.data.sort((a, b) => a.id < b.id ? 1 : -1).slice(0, 6)
                 setGames(data)
 
                 let dataRandom = cb.data.sort((a, b) => Math.random() - 0.5)

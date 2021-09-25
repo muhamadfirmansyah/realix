@@ -13,7 +13,8 @@ const Games = () => {
     useEffect(() => {
         getGames(cb => {
             if (!cb.error) {
-                setGames(cb.data)
+                let data = cb.data.sort((a, b) => a.id < b.id ? 1 : -1)
+                setGames(data)
                 setLoading(false)
             }
         })
