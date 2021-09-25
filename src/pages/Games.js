@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Typography, Col, Row, Skeleton } from "antd"
-import axios from "axios";
 import CardSecondary from '../components/CardSecondary'
+import { GlobalContext } from "../contexts/GlobalContext";
 
 const Games = () => {
+
+    const { getGames } = useContext(GlobalContext)
 
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const getGames = async () => {
-            let g = await axios.get(`https://backendexample.sanbersy.com/api/data-game`);
-            if (g) {
-                setGames(g.data)
+        getGames(cb => {
+            if (!cb.error) {
+                setGames(cb.data)
                 setLoading(false)
             }
-        }
-
-        getGames()
-    }, [])
+        })
+    }, [getGames])
 
     if (loading) {
         return <Skeleton active />

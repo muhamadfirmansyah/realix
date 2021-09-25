@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import LayoutComponent from "../layouts/LayoutComponent";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -8,8 +7,20 @@ import GamesDetail from "../pages/GamesDetail";
 import Home from "../pages/Home";
 import Movies from "../pages/Movies";
 import MoviesDetail from "../pages/MoviesDetail";
+import Cookies from "js-cookie"
+import AdminMovieList from "../pages/admin/movie/List";
+import AdminMovieCreate from "../pages/admin/movie/Create";
+import AdminMovieEdit from "../pages/admin/movie/Edit";
 
 const Routes = () => {
+
+  const ValidatedRoute = (props) => {
+    if (Cookies.get("user_token")) {
+      return <Route {...props} />
+    }
+
+    return <Redirect to="/login" />
+  }
 
   return (
     <BrowserRouter>
@@ -29,6 +40,27 @@ const Routes = () => {
         <Route path="/games/:id" exact>
           <LayoutComponent content={<GamesDetail />} />
         </Route>
+        <ValidatedRoute path="/admin/movies" exact>
+          <LayoutComponent content={<AdminMovieList />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/movies/create" exact>
+          <LayoutComponent content={<AdminMovieCreate />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/movies/edit/:id" exact>
+          <LayoutComponent content={<AdminMovieEdit />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/games" exact>
+          <LayoutComponent content={<AdminMovieList />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/games/create" exact>
+          <LayoutComponent content={<AdminMovieCreate />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/games/edit/:id" exact>
+          <LayoutComponent content={<AdminMovieEdit />} />
+        </ValidatedRoute>
+        <ValidatedRoute path="/admin/change-password" exact>
+          <LayoutComponent content={<AdminMovieCreate />} />
+        </ValidatedRoute>
         <Route path="/login" exact>
           <LayoutComponent content={<Login />} />
         </Route>

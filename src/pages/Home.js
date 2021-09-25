@@ -1,97 +1,134 @@
-import { Card, Col, Input, Select, Row, Skeleton, Typography } from "antd"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { Col, Input, Row, Skeleton, Typography } from "antd"
+import { useContext, useEffect, useState } from "react"
 import CardPrimary from "../components/CardPrimary"
 import CardSecondary from "../components/CardSecondary"
+import { GlobalContext } from "../contexts/GlobalContext"
 
 const Home = () => {
 
+    const { getMovies, getGames } = useContext(GlobalContext)
+
     const [movies, setMovies] = useState([])
     const [games, setGames] = useState([])
-    const [random, setRandom] = useState([])
+    const [initialMovies, setInitialMovies] = useState([])
+    const [initialGames, setInitialGames] = useState([])
 
     const [moviesLoading, setMoviesLoading] = useState(true)
     const [gamesLoading, setGamesLoading] = useState(true)
 
-    useEffect(async () => {
-        let m = await axios.get(`https://backendexample.sanbersy.com/api/data-movie`)
-        if (m) {
-            setMovies(m.data)
-            setMoviesLoading(false)
-        }
-        
-        let g = await axios.get(`https://backendexample.sanbersy.com/api/data-game`)
-        if (g) {
-            setGames(g.data)
-            setGamesLoading(false)
-        }
+    const [search, setSearch] = useState("")
+    const [searchMovies, setSearchMovies] = useState([])
+    const [searchGames, setSearchGames] = useState([])
 
+    useEffect(() => {
+        getMovies(cb => {
+            if (!cb.error) {
+                let data = cb.data.sort((a, b) => a.rating > b.rating ? -1 : (a.created_at < b.created_at ? 1 : 0)).slice(0, 3)
+                setMovies(data)
 
-    }, []);
+                let dataRandom = cb.data.sort((a, b) => Math.random() - 0.5)
+                setInitialMovies(dataRandom)
+                setSearchMovies(dataRandom.slice(0, 3))
+                setMoviesLoading(false)
+            }
+        })
+
+        getGames(cb => {
+            if (!cb.error) {
+                let data = cb.data.sort((a, b) => a.created_at < b.created_at).slice(0, 6)
+                setGames(data)
+
+                let dataRandom = cb.data.sort((a, b) => Math.random() - 0.5)
+                setInitialGames(dataRandom)
+                setSearchGames(dataRandom.slice(0, 3))
+                setGamesLoading(false)
+            }
+        })
+
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+    const helperSearch = (data, keyword) => {
+        let result = data.filter((item) => {
+            let title = item.title ?? item.name ?? ""
+            if (title.toUpperCase().indexOf(keyword.toUpperCase()) > -1 ) {
+                return item
+            }
+            return false
+        })
+
+        return result.slice(0,3)
+    }
+
+    const handleSearch = async (e) => {
+        setSearchMovies(await helperSearch(initialMovies, e.target.value))
+        setSearchGames(await helperSearch(initialGames, e.target.value))
+    }
 
     return (
         <>
             <section style={{ marginTop: "2rem" }}>
                 <header>
                     <Typography.Title level={2}>Explore</Typography.Title>
-                    <form>
-                        <Input.Group compact className="filter-search">
-                            <Input style={{ width: "44%" }} className="search-box" placeholder="Find movies and games here ..." />
-                            <Select  style={{ width: "18%" }} placeholder="Genre" allowClear bordered={false}>
-                                <Select.Option value="Option2">Option2</Select.Option>
-                            </Select>
-                            <Select  style={{ width: "18%" }} placeholder="Release" allowClear bordered={false}>
-                                <Select.Option value="All">Menari diatas penderitaan</Select.Option>
-                            </Select>
-                            <Select  style={{ width: "18%" }} placeholder="Duration" allowClear bordered={false}>
-                                <Select.Option value="Menari diatas penderitaan">Menari diatas penderitaan</Select.Option>
-                            </Select>
-                        </Input.Group>
-                    </form>
+                    <Input.Group compact className="filter-search search-only">
+                        <Input style={{ width: "100%" }} className="search-box" allowClear value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Enter to find movies and games here ..." onPressEnter={handleSearch} />
+                    </Input.Group>
                 </header>
-                <Row gutter={[12, 12]} style={{ marginTop: "22px" }}>
-                    <Col span={8}>
-                        <Card hoverable className="recomendation-card" style={{ background: `url(https://i.ibb.co/nmFFCRk/Rectangle-2.png)` }}>
-                            <div className="card-cover"></div>
-                            <div className="card-content">
-                                <Typography.Title level={5} className="card-snippet-top">2019</Typography.Title>
-                                <Typography.Title level={4} className="card-title">Movie Title</Typography.Title>
+                {(moviesLoading && gamesLoading) ? (
+                    <Skeleton active />
+                ) : (
+                    <>
+                        { searchMovies.length > 0 || searchGames.length > 0 ? (
+                            <Row gutter={[12, 12]} style={{ marginTop: "22px" }}>
+                                { searchMovies.length > 0 && searchMovies.map((item, index) => (
+                                    <Col span={8} key={`${item.id}_${index}`}>
+                                        <CardSecondary uri={`/movies/${item.id}`} item={item} />
+                                    </Col>
+                                ))}
+                                { searchGames.length > 0 && searchGames.map((item, index) => (
+                                    <Col span={8} key={`${item.id}_${index}`}>
+                                        <CardSecondary uri={`/games/${item.id}`} item={item} />
+                                    </Col>
+                                ))}
+                            </Row>
+                        ) : (
+                            <div style={{ paddingTop: "1rem" }}>
+                                <Typography.Title level={4} style={{ color: "#f1f1f1" }}>No Data Found</Typography.Title>
                             </div>
-                        </Card>
-                    </Col>
-                </Row>
+                        ) }
+                    </>
+                )}
             </section>
             <section style={{ marginTop: "60px" }}>
                 <header>
                     <Typography.Title level={2}><span style={{ color: "#40A798" }}>Rating:</span> Best Movies</Typography.Title>
                 </header>
-                { moviesLoading ? (
+                {moviesLoading ? (
                     <Skeleton active />
                 ) : (
                     <Row gutter={[12, 12]} style={{ marginTop: "22px" }}>
-                        { movies.sort((a, b) => a.rating < b.rating ? 1 : -1).slice(0, 3).map((item) => (
+                        {movies.map((item) => (
                             <Col span={8} key={item.id}>
                                 <CardPrimary uri={`/movies/${item.id}`} item={item} />
                             </Col>
-                        )) }
+                        ))}
                     </Row>
-                ) }
+                )}
             </section>
             <section style={{ marginTop: "60px" }}>
                 <header>
                     <Typography.Title level={2}><span style={{ color: "#40A798" }}>Latest:</span> Games</Typography.Title>
                 </header>
-                { gamesLoading ? (
+                {gamesLoading ? (
                     <Skeleton active />
                 ) : (
                     <Row gutter={[12, 12]} style={{ marginTop: "22px" }}>
-                        { games.sort((a, b) => a.created_at < b.created_at).slice(0, 6).map((item) => (
+                        {games.map((item) => (
                             <Col span={8} key={item.id}>
                                 <CardSecondary uri={`/games/${item.id}`} item={item} />
                             </Col>
-                        )) }
+                        ))}
                     </Row>
-                ) }
+                )}
             </section>
         </>
     )

@@ -1,10 +1,19 @@
 import { Header } from "antd/lib/layout/layout";
 import Cookies from "js-cookie";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useHistory } from "react-router-dom";
 
 const Navbar = () => {
+
+    const history = useHistory()
+
+    const setLogout = () => {
+        Cookies.remove("user_token")
+
+        history.push('/')
+    }
+
   return (
-    <Header style={{ position: "sticky" }}>
+    <Header>
         <div>
             <h1>
                 <Link to="/">Realix</Link>
@@ -21,13 +30,13 @@ const Navbar = () => {
                 <li>
                     <NavLink to="/games">Games</NavLink>
                 </li>
-                { Cookies.get("token") ? (
+                { Cookies.get("user_token") ? (
                     <>
                         <li>
-                            <NavLink to="/login" exact>Admin</NavLink>
+                            <NavLink to="/admin/movies">Admin</NavLink>
                         </li>
                         <li>
-                            <NavLink to="/register" exact className="nav-button">Logout</NavLink>
+                            <button onClick={() => setLogout()} className="nav-button">Logout</button>
                         </li>
                     </>
                 ) : (

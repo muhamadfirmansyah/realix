@@ -1,29 +1,36 @@
 import { Link, useParams } from "react-router-dom"
-import { Breadcrumb, Card, Col, Descriptions, Layout, Rate, Row, Skeleton, Typography } from "antd"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { Breadcrumb, Card, Col, Layout, Rate, Row, Skeleton, Typography } from "antd"
+import { useContext, useEffect, useState } from "react"
 import CardSecondary from "../components/CardSecondary"
+import { GlobalContext } from "../contexts/GlobalContext"
 
 const MoviesDetail = () => {
+    
+    const { getMovie, getMovies } = useContext(GlobalContext)
 
-    const [data, setData] = useState({})
-    const [relateds, setRelateds] = useState([])
+    const [movie, setMovie] = useState({})
+    const [movies, setMovies] = useState([])
     const [loading, setLoading] = useState(true)
 
     const { id } = useParams()
 
-    useEffect(async () => {
-        let detail = await axios.get(`https://backendexample.sanbersy.com/api/data-movie/${id}`)
-        if (detail) {
-            setData(detail.data)
-            setLoading(false)
-        }
+    useEffect(() => {
+        
+        getMovie(id, (cb) => {
+            if (!cb.error) {
+                setMovie(cb.data)
+                setLoading(false)
+            }
+        })
 
-        let rel = await axios.get(`https://backendexample.sanbersy.com/api/data-movie`)
-        if (rel) {
-            setRelateds(rel.data.filter(i => i.id !== parseInt(id)).slice(0, 3))
-        }
-    }, [id])
+        getMovies(cb => {
+            if (!cb.error) {
+                let data = cb.data.filter(d => d.id !== parseInt(id)).sort((a, b) => Math.random() - 0.5).slice(0, 3)
+                setMovies(data)
+            }
+        })
+
+    }, [getMovie, getMovies, id])
 
     if (loading) {
         return <Skeleton active />
@@ -31,7 +38,7 @@ const MoviesDetail = () => {
 
     return (
         <section style={{ marginTop: "2rem" }}>
-            <Typography.Title level={2} style={{ marginBottom: 0 }}>{ data.title }</Typography.Title>
+            <Typography.Title level={2} style={{ marginBottom: 0 }}>{ movie.title }</Typography.Title>
             <Breadcrumb style={{ marginTop: "6px", fontSize: "14px" }}>
                 <Breadcrumb.Item>
                     <Link to="/">Explore</Link>
@@ -43,9 +50,9 @@ const MoviesDetail = () => {
             </Breadcrumb>
 
             <Row gutter={[22, 22]} style={{ marginTop: "28px" }}>
-                <Col span={16}>
+                <Col span={15}>
                     <Layout style={{ background: "#FFFFFF" }}>
-                        <Typography.Paragraph style={{ fontSize: "14px" }}>{data.description}</Typography.Paragraph>
+                        <Typography.Paragraph style={{ fontSize: "14px" }}>{movie.description}</Typography.Paragraph>
 
                         <div style={{ marginTop: "20px" }}>
                             <Typography.Title level={4}>Infomation</Typography.Title>
@@ -55,40 +62,42 @@ const MoviesDetail = () => {
                                     <tr>
                                         <th style={ RowMiddle }>Genre</th>
                                         <td style={ ColMiddle }>
-                                            { data.genre }
+                                            { movie.genre }
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style={ RowMiddle }>Duration</th>
                                         <td style={ ColMiddle }>
-                                            { data.duration } minutes
+                                            { movie.duration } minutes
                                         </td>
                                     </tr>
                                     <tr>
                                         <th style={ RowMiddle }>Release</th>
                                         <td style={ ColMiddle }>
-                                            { data.year }
+                                            { movie.year }
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th style={ RowMiddle }>Rating</th>
-                                        <td style={ ColMiddle }>
-                                            <Rate allowHalf disabled value={ parseFloat(data.rating)/2 } /> 
-                                            <span style={{ color: "#979797", marginLeft: "8px" }}>({ data.rating } out of 10)</span>
+                                        <th style={{ ...RowMiddle, verticalAlign: "middle" }}>Rating</th>
+                                        <td style={{ ...ColMiddle, verticalAlign: "middle" }}>
+                                            <Rate allowHalf disabled value={ parseFloat(movie.rating)/2 } /> 
+                                            <span style={{ color: "#979797", marginLeft: "8px" }}>({ movie.rating } out of 10)</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th style={{ ...RowMiddle, verticalAlign: "top" }}>Review</th>
-                                        <td style={{ ...ColMiddle, verticalAlign: "top" }}>{ data.review }</td>
+                                        <th style={RowMiddle}>Review</th>
+                                        <td style={ColMiddle}>{ movie.review }</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </Layout>
                 </Col>
-                <Col span={8}>
+                <Col span={9}>
                     <Layout style={{ background: "#FFFFFF" }}>
-                        <Card hoverable style={{ background: `url(${data.image_url})` }} className="poster-detail"/>
+                        <Card hoverable className="poster-image">
+                            <div className="poster-image-body" style={{ background: `url(${movie.image_url})` }}></div>
+                        </Card>
                     </Layout>
                 </Col>
                 <Col span={24}>
@@ -96,7 +105,7 @@ const MoviesDetail = () => {
                         <Typography.Title level={4}>Related</Typography.Title>
 
                         <Row gutter={[12, 12]} style={{ marginTop: "22px" }}>
-                            { relateds.map(( item, index ) => (
+                            { movies.map(( item, index ) => (
                                 <Col span={8} key={index}>
                                     <CardSecondary uri={`/movies/${item.id}`} item={item} />
                                 </Col>
@@ -112,5 +121,5 @@ const MoviesDetail = () => {
 export default MoviesDetail
 
 // Styles
-const RowMiddle = { padding: "0.6rem 0", width: "5rem", textAlign: "left", verticalAlign: "middle" }
-const ColMiddle = { padding: "0.6rem 0", verticalAlign: "middle" }
+const RowMiddle = { padding: "0.6rem 0", width: "5rem", textAlign: "left", verticalAlign: "top" }
+const ColMiddle = { padding: "0.6rem 0", verticalAlign: "top" }

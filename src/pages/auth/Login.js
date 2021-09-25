@@ -1,12 +1,45 @@
-import { Form, Input, Button, Checkbox, Typography } from "antd";
+import { Form, Input, Button, Checkbox, Typography, Alert } from "antd";
+import { useContext, useState } from "react";
+import { GlobalContext } from "../../contexts/GlobalContext";
+import Cookies from "js-cookie"
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
+
+  const history = useHistory()
+
+  const { setLogin } = useContext(GlobalContext)
+
+  const [ isAlert, setIsAlert ] = useState({
+    type: "",
+    title: "",
+    message: [],
+    status: false
+  })
+
   const onFinish = (values) => {
-    console.log("Success:", values);
+    setLogin(values, (res) => {
+      if (res.error && res.http !== 201) {
+          setIsAlert({
+              type: "error",
+              title: "Login Failed",
+              message: Object.values(res.message),
+              status: true
+          })
+      } else {
+          if (values.remember) {
+            Cookies.set("user_token", JSON.stringify(res.data), { expires: 7 })
+          } else {
+            Cookies.set("user_token", JSON.stringify(res.data))
+          }
+
+          history.push('/')
+      }
+    })
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    console.log(errorInfo);
   };
 
   return (
@@ -19,6 +52,19 @@ const Login = () => {
         autoComplete="off"
         layout="vertical"
         >
+
+        { isAlert.status && (
+          <Alert
+              message={ isAlert.title }
+              description={ isAlert.message.map((item, index) => (
+                  <div key={index}>{item}</div>
+              )) }
+              type={ isAlert.type }
+              style={{ marginBottom: "2rem" }}
+              showIcon
+              />
+        )}
+
         <Typography.Title level={1} style={{ marginBottom: "34px" }}>Login</Typography.Title>
         <Form.Item
             style={{ marginBottom: "1rem" }}
