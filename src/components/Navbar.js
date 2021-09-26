@@ -7,7 +7,7 @@ const Navbar = () => {
     const history = useHistory()
 
     const setLogout = () => {
-        Cookies.remove("user_token")
+        Cookies.remove("realix_user_token")
 
         history.push('/')
     }
@@ -30,7 +30,7 @@ const Navbar = () => {
                 <li>
                     <NavLink to="/games">Games</NavLink>
                 </li>
-                { Cookies.get("user_token") ? (
+                { Cookies.get("realix_user_token") ? (
                     <>
                         <li>
                             <NavLink to="/admin/movies">Admin</NavLink>

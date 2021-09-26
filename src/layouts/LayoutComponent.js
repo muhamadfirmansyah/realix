@@ -24,7 +24,7 @@ const LayoutComponent = ({ content }) => {
   return (
     <GlobalProvider>
       <Layout style={{ background: "#FFFFFF" }}>
-        { Cookies.get("user_token") && (
+        { Cookies.get("realix_user_token") && (
           <Sidebar />
         ) }
         <Layout style={{ background: "#FFFFFF" }}>
@@ -34,7 +34,7 @@ const LayoutComponent = ({ content }) => {
             style={{
               padding: 24,
               margin: "0 auto",
-              width: Cookies.get("user_token") ? "758px" : "758px",
+              width: Cookies.get("realix_user_token") ? "758px" : "758px",
               minHeight: "calc(100vh - 14rem)",
             }}
           >

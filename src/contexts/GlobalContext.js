@@ -121,7 +121,7 @@ export const GlobalProvider = (props) => {
 
     const deleteMovie = (id, cb) => {
 
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -140,7 +140,7 @@ export const GlobalProvider = (props) => {
     }
 
     const addMovie = ((data, cb) => {
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -159,7 +159,7 @@ export const GlobalProvider = (props) => {
     })
 
     const updateMovie = ((id, data, cb) => {
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -179,7 +179,7 @@ export const GlobalProvider = (props) => {
 
     const deleteGame = (id, cb) => {
 
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -198,7 +198,7 @@ export const GlobalProvider = (props) => {
     }
 
     const addGame = ((data, cb) => {
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -217,7 +217,7 @@ export const GlobalProvider = (props) => {
     })
 
     const updateGame = ((id, data, cb) => {
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }
@@ -236,7 +236,7 @@ export const GlobalProvider = (props) => {
     })
 
     const updatePassword = (data, cb) => {
-        let token = JSON.parse(Cookies.get("user_token")).token
+        let token = JSON.parse(Cookies.get("realix_user_token")).token
         let config = {
             headers: {"Authorization": `Bearer ${token}`}
         }

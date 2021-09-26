@@ -19,7 +19,7 @@ import ChangePassword from "../pages/admin/auth/ChangePassword";
 const Routes = () => {
 
   const ValidatedRoute = (props) => {
-    if (Cookies.get("user_token")) {
+    if (Cookies.get("realix_user_token")) {
       return <Route {...props} />
     }
 

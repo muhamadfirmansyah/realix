@@ -28,9 +28,9 @@ const Login = () => {
           })
       } else {
           if (values.remember) {
-            Cookies.set("user_token", JSON.stringify(res.data), { expires: 7 })
+            Cookies.set("realix_user_token", JSON.stringify(res.data), { expires: 7 })
           } else {
-            Cookies.set("user_token", JSON.stringify(res.data))
+            Cookies.set("realix_user_token", JSON.stringify(res.data))
           }
 
           history.push('/')

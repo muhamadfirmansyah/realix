@@ -28,7 +28,7 @@ const Register = () => {
                     status: true
                 })
             } else {
-                Cookies.set("user_token", JSON.stringify(res.data))
+                Cookies.set("realix_user_token", JSON.stringify(res.data))
                 history.push('/')
             }
         })  
